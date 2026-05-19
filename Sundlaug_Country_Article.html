@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sundlaug Country — Why Iceland Has More Public Pools Per Person Than Anywhere on Earth</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --basalt:      #0c1820;
+    --basalt-mid:  #15232c;
+    --steam:       #edf1f2;
+    --steam-soft:  #e2e8ea;
+    --paper:       #d8dfe0;
+    --pool:        #2a6e6b;
+    --pool-mid:    #3d8682;
+    --pool-light:  #6da9a5;
+    --copper:      #b56b3a;
+    --copper-soft: #c98756;
+    --muted:       #6c7679;
+    --border:      #c0c9cc;
+    --rule:        #bfc7c9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--steam);
+    color: var(--basalt);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.85;
+    overflow-x: hidden;
+  }
+
+  /* ───────────────────────────── HERO ───────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    background: var(--steam);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 56px 80px 72px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* Subtle steam-rising gradient overlay */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 80% 110%, rgba(42, 110, 107, 0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 30% at 10% -10%, rgba(181, 107, 58, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Faint grid texture echoing pool-tile geometry */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(12, 24, 32, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(12, 24, 32, 0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pool);
+  }
+  .hero-eyebrow .accent {
+    margin-left: 24px;
+    color: var(--muted);
+  }
+
+  .hero-issue {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1080px;
+    align-self: center;
+    padding-top: 40px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.4s;
+  }
+
+  .hero-icelandic {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 28px;
+  }
+  .hero-icelandic .sep {
+    margin: 0 16px;
+    color: var(--rule);
+  }
+
+  .hero-rule {
+    width: 64px;
+    height: 2px;
+    background: var(--copper);
+    margin-bottom: 32px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--basalt);
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    font-size: clamp(4.5rem, 10vw, 8.5rem);
+  }
+  .hero-title .country {
+    display: block;
+    font-style: italic;
+    color: var(--pool);
+    font-weight: 400;
+  }
+
+  .hero-sub {
+    margin-top: 36px;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+    color: var(--basalt-mid);
+    max-width: 720px;
+    line-height: 1.5;
+  }
+
+  .hero-stats {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 0;
+    margin-top: 80px;
+    border-top: 1px solid var(--rule);
+    padding-top: 36px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.7s;
+  }
+  .hero-stat {
+    padding-right: 36px;
+    border-right: 1px solid var(--rule);
+  }
+  .hero-stat:last-child { border-right: none; padding-right: 0; }
+  .hero-stat + .hero-stat { padding-left: 36px; }
+
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    color: var(--basalt);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .hero-stat.primary .hero-stat-num { color: var(--copper); }
+  .hero-stat-unit {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .hero-stat-label {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.95rem;
+    color: var(--basalt-mid);
+    margin-top: 12px;
+    line-height: 1.45;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .scroll-cue .scroll-line {
+    width: 1px;
+    height: 36px;
+    background: var(--copper);
+    margin: 12px auto 0;
+    animation: scrollPulse 2.4s ease-in-out infinite;
+    transform-origin: top;
+  }
+
+  /* ───────────────────────────── LAYOUT ───────────────────────────── */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .container-wide {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .section {
+    padding: 100px 0;
+    position: relative;
+  }
+  .section.tinted { background: var(--steam-soft); }
+
+  /* Section divider with a tiny basalt diamond — visual signature */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 80px auto;
+    max-width: 760px;
+    padding: 0 32px;
+  }
+  .divider .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .divider .diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--copper);
+    transform: rotate(45deg);
+  }
+
+  /* ───────────────────────────── TYPOGRAPHY ───────────────────────────── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+    color: var(--basalt);
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    margin: 0 0 36px;
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--basalt);
+    margin: 36px 0 18px;
+  }
+
+  p {
+    font-size: 1.075rem;
+    color: var(--basalt-mid);
+    margin: 0 0 28px;
+  }
+
+  p strong {
+    font-weight: 600;
+    color: var(--basalt);
+  }
+
+  em { font-style: italic; }
+
+  a {
+    color: var(--pool);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(42,110,107,0.35);
+    transition: border-color 0.2s;
+  }
+  a:hover { border-color: var(--pool); }
+
+  /* ───────────────────────────── CHAPTER MARKER ───────────────────────────── */
+  .chapter {
+    padding: 96px 0 24px;
+  }
+  .chapter-marker {
+    max-width: 760px;
+    margin: 0 auto 48px;
+    padding: 0 32px;
+  }
+  .chapter-icelandic {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--copper);
+    letter-spacing: -0.005em;
+    line-height: 1;
+  }
+  .chapter-english {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .chapter-english .rule {
+    width: 44px;
+    height: 1px;
+    background: var(--copper);
+  }
+
+  /* ───────────────────────────── METHOD CALLOUT ───────────────────────────── */
+  .method-callout {
+    background: var(--paper);
+    border-left: 3px solid var(--pool);
+    padding: 28px 36px;
+    margin: 32px 0;
+  }
+  .method-callout .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pool);
+    margin-bottom: 14px;
+  }
+  .method-callout p {
+    font-size: 0.96rem;
+    margin: 0;
+    color: var(--basalt-mid);
+    line-height: 1.7;
+  }
+  .method-callout p + p { margin-top: 12px; }
+
+  /* ───────────────────────────── PULL QUOTE ───────────────────────────── */
+  .pullquote {
+    margin: 56px 0;
+    padding: 0 0 0 40px;
+    border-left: 3px solid var(--copper);
+    position: relative;
+  }
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    color: var(--basalt);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* ───────────────────────────── INLINE HIGHLIGHT ───────────────────────────── */
+  .highlight {
+    background: var(--steam-soft);
+    border-top: 2px solid var(--pool);
+    border-bottom: 2px solid var(--pool);
+    padding: 24px 32px;
+    margin: 36px 0;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    color: var(--basalt);
+    line-height: 1.6;
+  }
+  .highlight strong {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--copper);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* ───────────────────────────── CHARTS ───────────────────────────── */
+  .chart-wrapper {
+    margin: 56px 0;
+    background: var(--steam);
+    border: 1px solid var(--border);
+    padding: 36px 32px 24px;
+  }
+  .chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--basalt);
+    margin-bottom: 4px;
+  }
+  .chart-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .chart-container {
+    position: relative;
+    height: 360px;
+  }
+  .chart-container-tall {
+    position: relative;
+    height: 420px;
+  }
+  .chart-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 16px;
+    text-align: right;
+    letter-spacing: 0.06em;
+  }
+
+  /* ───────────────────────────── DARK SECTION ───────────────────────────── */
+  .dark-section {
+    background: var(--basalt);
+    color: var(--steam);
+    padding: 120px 0;
+    border-top: 1px solid var(--basalt-mid);
+    border-bottom: 1px solid var(--basalt-mid);
+    position: relative;
+    overflow: hidden;
+  }
+  .dark-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 90% 10%, rgba(181, 107, 58, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 90%, rgba(42, 110, 107, 0.10) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .dark-section > * { position: relative; z-index: 1; }
+  .dark-section h2 { color: var(--steam); }
+  .dark-section h3 { color: var(--steam); }
+  .dark-section p { color: rgba(237, 241, 242, 0.78); }
+  .dark-section p strong { color: var(--steam); }
+  .dark-section .chapter-icelandic { color: var(--copper-soft); }
+  .dark-section .chapter-english { color: rgba(237, 241, 242, 0.5); }
+  .dark-section .chapter-english .rule { background: var(--copper-soft); }
+  .dark-section .pullquote {
+    border-left-color: var(--copper-soft);
+  }
+  .dark-section .pullquote p { color: var(--steam); }
+
+  /* ───────────────────────────── HISTORICAL TIMELINE ───────────────────────────── */
+  .timeline {
+    margin: 48px 0;
+    border-top: 1px solid rgba(237, 241, 242, 0.18);
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 32px;
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(237, 241, 242, 0.12);
+  }
+  .timeline-year {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--copper-soft);
+    line-height: 1.2;
+  }
+  .timeline-detail-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(237, 241, 242, 0.45);
+    margin-bottom: 6px;
+  }
+  .timeline-detail-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.98rem;
+    color: rgba(237, 241, 242, 0.85);
+    line-height: 1.55;
+  }
+  .timeline-detail-text strong {
+    color: var(--copper-soft);
+    font-weight: 500;
+  }
+
+  /* ───────────────────────────── SENSITIVITY CARDS ───────────────────────────── */
+  .sensitivity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 40px 0;
+  }
+  .sens-card {
+    background: var(--steam);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+  }
+  .sens-country {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pool);
+    margin-bottom: 18px;
+  }
+  .sens-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .sens-row.preferred { border-top-color: var(--copper); }
+  .sens-row-label {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .sens-row-value {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--basalt);
+  }
+  .sens-row.preferred .sens-row-value { color: var(--copper); }
+  .sens-verdict {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--basalt-mid);
+    margin-top: 16px;
+    line-height: 1.45;
+  }
+
+  /* ───────────────────────────── FOOTER ───────────────────────────── */
+  footer {
+    background: var(--steam);
+    color: var(--basalt-mid);
+    padding: 80px 0 64px;
+    border-top: 1px solid var(--rule);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .footer-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 14px;
+  }
+  .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--pool);
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  .footer-meta-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+  .footer-source-group {
+    margin-bottom: 32px;
+  }
+  .footer-source-group:last-child { margin-bottom: 0; }
+  .footer-source-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--pool);
+    margin-bottom: 12px;
+  }
+  .footer-source-list {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    color: var(--basalt-mid);
+    line-height: 1.7;
+  }
+  .footer-source-list em { color: var(--basalt); font-style: italic; }
+
+  .footer-bottom {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer-bottom .accent {
+    color: var(--copper);
+    margin: 0 14px;
+  }
+
+  /* ───────────────────────────── ANIMATIONS ───────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50%      { opacity: 1; transform: scaleY(1.15); }
+  }
+
+  .section, .dark-section, .chapter { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .section.visible, .dark-section.visible, .chapter.visible { opacity: 1; transform: translateY(0); }
+
+  /* ───────────────────────────── RESPONSIVE ───────────────────────────── */
+  @media (max-width: 900px) {
+    .hero { padding: 32px 24px 56px; }
+    .hero-content { padding-top: 24px; }
+    .hero-stats { grid-template-columns: 1fr; gap: 28px; margin-top: 56px; }
+    .hero-stat {
+      padding: 0 !important;
+      border-right: none !important;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 24px !important;
+    }
+    .hero-stat:last-child { border-bottom: none; }
+    .container, .container-wide { padding: 0 24px; }
+    .section, .dark-section { padding: 72px 0; }
+    .chapter { padding: 72px 0 16px; }
+    .sensitivity-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .timeline-item { grid-template-columns: 80px 1fr; gap: 20px; }
+    .pullquote { padding-left: 28px; }
+    .method-callout { padding: 24px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────────── HERO ───────────────────────────── -->
+<section class="hero">
+  <div class="hero-top">
+    <div class="hero-eyebrow">
+      Somewhere-else.org<span class="accent">An essay on public infrastructure</span>
+    </div>
+    <div class="hero-issue">May 2026</div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-icelandic">
+      Sundlaug <span class="sep">·</span> Heitir pottar <span class="sep">·</span> Kaldur pottur
+    </div>
+    <div class="hero-rule"></div>
+    <h1 class="hero-title">
+      Sundlaug
+      <span class="country">Country</span>
+    </h1>
+    <p class="hero-sub">
+      Iceland has more public swimming pools per person than any country on Earth — and the size of the gap, once you actually measure it, raises a question about what we're counting when we count public infrastructure.
+    </p>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat primary">
+      <div class="hero-stat-num">23.5</div>
+      <div class="hero-stat-unit">Pools per 100,000 residents</div>
+      <div class="hero-stat-label">Iceland's per-capita public swimming pool density — the highest documented anywhere.</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">14×</div>
+      <div class="hero-stat-unit">Iceland / United States</div>
+      <div class="hero-stat-label">Ratio between the highest- and lowest-density country in this analysis.</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">1.6</div>
+      <div class="hero-stat-unit">Pools per 100,000 (U.S.)</div>
+      <div class="hero-stat-label">The United States, despite a far larger population, has the lowest density of the five countries measured.</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 1 — MÆLING ───────────────────────────── -->
+<div class="chapter">
+  <div class="chapter-marker">
+    <div class="chapter-icelandic">Mæling</div>
+    <div class="chapter-english"><span class="rule"></span>The Measurement</div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <h2>If you start counting, you almost immediately have to decide what counts.</h2>
+
+    <p>The proposition for this essay is straightforward: Iceland operates more public swimming pools per person than anywhere else on Earth. Most people who have spent any time in Reykjavík sense this intuitively — the city has pools the way American towns have parking lots. The question is whether the intuition holds up when you actually measure it, and what shows up around the edges of the answer.</p>
+
+    <p>The answer is that the intuition is correct, but the gap to the next-densest country is much larger than the framing "more than anywhere else" suggests. Iceland operates at approximately <strong>23.5 public swimming pools per 100,000 residents</strong>. The next country down — Sweden — operates at 4.3. That is roughly a five-and-a-half-fold gap, which is the kind of ratio that survives almost any plausible counting argument you can make against it.</p>
+
+    <p>The framing of this essay, though, isn't really "look how many pools Iceland has." It's that an honest cross-country count of public pools turns out to measure two things at once: how many publicly-operated swimming facilities each country has, <em>and</em> how each country decides to socialize the provision of recreational bathing in the first place. Those two things are not separable. The number that comes out at the end is a function of both.</p>
+
+    <div class="method-callout">
+      <div class="label">By the strict definition</div>
+      <p>A facility was counted here only if it met four criteria: operated by local government, a municipality, or a government-licensed nonprofit; open to the general public for a per-visit fee; in year-round operation; and a constructed pool, not a natural hot spring or unimproved bathing site. Tourism-oriented lagoons, private clubs, hotel pools, school pools, and seasonal-only outdoor pools were all excluded.</p>
+      <p>This is a conservative definition — it produces lower counts than the inclusive figures sometimes cited in tourism writing. The conservatism is intentional. A strict definition applied uniformly across countries produces a more defensible comparison than a permissive definition that ends up counting different categories of facility in different national contexts.</p>
+    </div>
+
+    <p>What follows is built on counts from five countries: Iceland (93 pools), Finland (198 indoor swimming halls), Sweden (~450), the United Kingdom (2,646), and the United States (~5,500). Per-capita rates are reported with bounded uncertainty rather than as point estimates. For the four countries with authoritative directories, the uncertainty is small and population-driven. For the United States, which has no national pool directory, the count itself is the dominant source of uncertainty and the reported range is correspondingly wider.</p>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 2 — FRÁVIK ───────────────────────────── -->
+<div class="chapter">
+  <div class="chapter-marker">
+    <div class="chapter-icelandic">Frávik</div>
+    <div class="chapter-english"><span class="rule"></span>The Outlier</div>
+  </div>
+</div>
+
+<section class="section tinted">
+  <div class="container">
+    <h2>Iceland's pool density isn't unusual. It's categorically different.</h2>
+
+    <p>Iceland operates at 23.5 public pools per 100,000 residents. The greater Reykjavík capital area alone has 18 public pools for a population of roughly 240,000 — a per-capita rate of 7.5 per 100,000, which on its own would still place Reykjavík above every other country's national average in this analysis. The high density is not a small-country artifact concentrated in the capital. It holds across the country, including in rural regions whose population density is lower than that of the American Mountain West.</p>
+
+    <p>The most-cited explanation is geothermal. Heating a pool with hot groundwater is dramatically cheaper than heating it with electricity or natural gas, and once a town has a working geothermal well it can run a 25-meter year-round pool on what would otherwise be a fraction of a single building's heating budget. This is a real explanation. But it is not, by itself, a complete one — geothermally-active countries elsewhere in the world (New Zealand, Japan, parts of the United States) do not operate public pool networks at anything close to Icelandic density. Geothermal heat makes the economics work; it doesn't, by itself, make a country decide to spend the money.</p>
+
+    <div class="chart-wrapper">
+      <div class="chart-title">Public Pool Density Across Five Countries</div>
+      <div class="chart-subtitle">Pools per 100,000 residents · uncertainty ranges shown</div>
+      <div class="chart-container-tall">
+        <canvas id="densityChart"></canvas>
+      </div>
+      <div class="chart-note">Source: National directories (Iceland, Finland, UK), industry research (Sweden), Trust for Public Land estimate (US)</div>
+    </div>
+
+    <p>Read the chart again, paying attention to the ratio rather than the bars themselves. Sweden is the second-densest country in the analysis, and the gap between Sweden and Iceland is larger than the gap between Sweden and the United States. That is an unusual shape. In most cross-country distributions of public infrastructure — schools per capita, hospital beds per capita, libraries per capita — the high end of the range and the low end differ by something like a factor of two or three. Here the high end and the low end differ by a factor of fourteen, and the second-place country is closer to the bottom than to the top.</p>
+
+    <div class="pullquote">
+      <p>"At Iceland's per-capita rate, the United States would have roughly 80,000 public pools instead of the 5,500 it actually has."</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 3 — KLASI ───────────────────────────── -->
+<div class="chapter">
+  <div class="chapter-marker">
+    <div class="chapter-icelandic">Klasi</div>
+    <div class="chapter-english"><span class="rule"></span>The Cluster</div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <h2>Three European countries land in a tight cluster between 3.5 and 4.3.</h2>
+
+    <p>Below Iceland, the next three countries in the analysis arrange themselves in a narrow band: Sweden at 4.3 per 100,000, the United Kingdom at 3.95, and Finland at 3.5. Their uncertainty ranges overlap. At the precision of this measurement, the three are statistically indistinguishable. The cluster contains two Nordic countries and one non-Nordic European country, which is a small but useful signal that what is happening here is not a Nordic regional pattern. The UK and Sweden arrived at similar per-capita pool densities via different national traditions of municipal recreation, different funding mechanisms, and different operational models. They ended up in the same place anyway.</p>
+
+    <p>Whether this clustering generalizes to the rest of developed Europe is a question this essay does not try to answer. Germany, France, the Netherlands, Norway, Denmark, and most of the rest of the continent aren't in the dataset. The five-country sample was selected because each country has an authoritative national source for pool counts and because the set spans the analytical shape of interest. A larger sample might reveal that the three-country cluster identified here is itself a regional phenomenon, or that the developed-world distribution is wider than these three countries suggest. The conservative reading is that the cluster is a property of this specific comparison rather than a property of "developed Europe" as a category.</p>
+
+    <p>Even so, the cluster is informative. Three countries with different recreation cultures arriving at similar per-capita public-pool densities suggests that a developed-country baseline of roughly four pools per 100,000 residents is at least one stable equilibrium — a level of provisioning that a state can sustain over decades without unusual conditions like geothermal heating, and that residents apparently come to expect from their municipalities. It is not a universal baseline. But it is a real one, observable in three different countries whose recreation policies were not coordinated with each other.</p>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 4 — GJÁ ───────────────────────────── -->
+<div class="chapter">
+  <div class="chapter-marker">
+    <div class="chapter-icelandic">Gjá</div>
+    <div class="chapter-english"><span class="rule"></span>The Gap</div>
+  </div>
+</div>
+
+<section class="section tinted">
+  <div class="container">
+    <h2>The United States operates at roughly 40% of the European cluster's rate.</h2>
+
+    <p>The United States has approximately 5,500 public swimming pools serving a population of about 335 million. That works out to 1.6 pools per 100,000 residents, with a measurement range of roughly 1.4 to 1.8. The European cluster — Sweden, the UK, Finland — operates at an average rate of about 3.9 per 100,000. The American rate is approximately 40 percent of that. Put differently, even at the upper end of the U.S. estimate, the country has roughly twice as many public pools as the United Kingdom — despite a population about five times as large.</p>
+
+    <p>The gap is robust to the count uncertainty. Even at the upper bound of the American range — 1.8 pools per 100,000, which assumes the higher end of the plausible US count — the rate remains below the lower bound of every European country in the analysis. The United States is the only country in the dataset whose uncertainty range does not overlap with the European cluster. The gap is real and the gap is large.</p>
+
+    <div class="method-callout">
+      <div class="label">How the U.S. count was estimated</div>
+      <p>Unlike the other four countries, the United States has no authoritative national directory of public swimming pools. The 5,500 figure used here is the midpoint of a plausible 5,000–6,000 range, derived from a Trust for Public Land analysis of the 100 most populous U.S. cities (median 1.8 pools per 100,000 residents) scaled to national population. The methodology assumes top-100 cities are representative of national patterns, which may not hold for rural counties or small municipalities.</p>
+      <p>The 1.4–1.8 reported range captures count variability within the Trust for Public Land framework but does not capture uncertainty in the scaling assumption itself, which is a structural source of variability the reported range does not quantify. A truer uncertainty range would likely be wider — but the headline finding (the U.S. below the European cluster) survives any plausible widening, since the European lower bound is approximately 3.4.</p>
+    </div>
+
+    <p>One sensitivity question is worth addressing directly, because it determines whether the headline framing holds. The United Kingdom's count of 2,646 pools includes facilities operated by private leisure-management companies (GLL, Everyone Active, Freedom Leisure) under contract with local authorities. If those facilities are excluded and only directly council-operated pools are counted, the UK figure drops to 898 facilities and a per-capita rate of 1.34 — below the United States rather than within the European cluster. This would fundamentally rearrange the picture.</p>
+
+    <p>The narrower count, however, measures operational arrangements rather than public access. A swimming pool run by a private contractor on behalf of a local council and a swimming pool run directly by council staff are, from the perspective of any resident who walks in and pays a per-visit fee, the same kind of facility. They are publicly-accessible, publicly-regulated, fee-equivalent infrastructure. The shift from direct municipal operation to outsourced operation in the UK since the 1990s reflects changes in municipal employment patterns, not changes in the public-good function of the facilities themselves. The strict-definition count used here treats "publicly accessible, publicly regulated" as the operative criterion. The narrower 898 figure is documented for transparency but not adopted.</p>
+
+    <div class="highlight">
+      <strong>By the numbers</strong>
+      Iceland: 23.5 per 100,000 (range 23.0–24.0). Sweden: 4.3 (4.2–4.4). United Kingdom: 3.95 (3.87–4.03). Finland: 3.5 (3.4–3.6). United States: 1.6 (1.4–1.8). The gap between the U.S. and the European cluster lower bound (3.4) is approximately a factor of 1.9. The gap between the U.S. and Iceland is approximately a factor of 14.
+    </div>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 5 — NÆMNI ───────────────────────────── -->
+<div class="chapter">
+  <div class="chapter-marker">
+    <div class="chapter-icelandic">Næmni</div>
+    <div class="chapter-english"><span class="rule"></span>The Sensitivity</div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <h2>Two of the headline patterns survive almost any defensible alternative definition.</h2>
+
+    <p>The hardest objection to a cross-country comparison like this one is that the answer can be made to move by changing what counts as a public pool. The objection is correct in general but doesn't apply to most of the patterns here. Three of the five countries had defensible alternative definitions that would have produced meaningfully different counts. None of those alternatives changes the picture.</p>
+
+    <div class="sensitivity-grid">
+      <div class="sens-card">
+        <div class="sens-country">Iceland</div>
+        <div class="sens-row preferred">
+          <span class="sens-row-label">Strict (this report)</span>
+          <span class="sens-row-value">23.5</span>
+        </div>
+        <div class="sens-row">
+          <span class="sens-row-label">Inclusive (with lagoons, hot springs, natural pools)</span>
+          <span class="sens-row-value">30.3</span>
+        </div>
+        <div class="sens-verdict">Outlier status holds. The strict count is more than 5× the next country; the inclusive count is roughly 7×.</div>
+      </div>
+
+      <div class="sens-card">
+        <div class="sens-country">Finland</div>
+        <div class="sens-row preferred">
+          <span class="sens-row-label">Strict (indoor halls only)</span>
+          <span class="sens-row-value">3.5</span>
+        </div>
+        <div class="sens-row">
+          <span class="sens-row-label">Broader (outdoor pools + low-cost spas)</span>
+          <span class="sens-row-value">~5.4</span>
+        </div>
+        <div class="sens-verdict">Cluster position holds. Broader definition shifts Finland slightly above Sweden but keeps it inside the European cluster.</div>
+      </div>
+
+      <div class="sens-card">
+        <div class="sens-country">United Kingdom</div>
+        <div class="sens-row preferred">
+          <span class="sens-row-label">Strict (all publicly-accessible)</span>
+          <span class="sens-row-value">3.95</span>
+        </div>
+        <div class="sens-row">
+          <span class="sens-row-label">Council-operated only</span>
+          <span class="sens-row-value">1.34</span>
+        </div>
+        <div class="sens-verdict">Only here does definition matter. See discussion in the previous section — the narrow count measures operational arrangements, not access.</div>
+      </div>
+    </div>
+
+    <p>The two patterns the rest of the essay is built on — Iceland's outlier status, and the gap between the United States and the European cluster — survive every defensible alternative definition tested. The one case where a definition swing would change the picture (the UK council-only count) is addressed by a methodological argument rather than by changing the definition. The argument: counts that mix operational arrangements with public-access criteria produce comparisons of unlike quantities.</p>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 6 — SAGA (DARK) ───────────────────────────── -->
+<section class="dark-section">
+  <div class="container">
+    <div class="chapter-marker" style="padding: 0; margin-bottom: 56px;">
+      <div class="chapter-icelandic">Saga</div>
+      <div class="chapter-english"><span class="rule"></span>The History</div>
+    </div>
+
+    <h2>The American gap has a history. It is not, however, only the history most often told about it.</h2>
+
+    <p>The natural question to ask once you have the cross-country numbers is why the United States is so far below the European cluster. The most widely-cited scholarly explanation, advanced by the historian Jeff Wiltse in his 2007 book <em>Contested Waters</em>, points to a specific mid-century mechanism centered on the desegregation era. The argument, as transmitted through journalism and other secondary sources citing Wiltse's work, runs roughly as follows.</p>
+
+    <p>The United States built a substantial public pool infrastructure between the 1920s and 1940s. The Works Progress Administration and Public Works Administration funded approximately 750 public pools between 1933 and 1939 — a single decade of federal investment in recreational infrastructure with few parallels in the country's history. Some of these pools were among the largest in the world at the time of construction, designed to hold thousands of swimmers simultaneously.</p>
+
+    <p>Through the 1920s and 1940s, most of these pools were segregated by race, either formally or by unwritten convention. When courts began ordering desegregation in the late 1940s and early 1950s, the response in many municipalities was to close pools rather than integrate them, or to let them deteriorate as white attendance dropped. The Fairground Park Pool in St. Louis is the most-documented case: roughly 313,000 swims in the summer of 1948; court-ordered desegregation in summer 1949; approximately 10,000 swims by summer 1950 — a 97% attendance collapse. The pool closed permanently in 1956. Similar patterns appear elsewhere. A 1971 Supreme Court case, <em>Palmer v. Thompson</em>, effectively legalized the practice by ruling that Jackson, Mississippi could close four of its five public pools rather than integrate them.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1933–<br>1939</div>
+        <div>
+          <div class="timeline-detail-label">Federal investment</div>
+          <div class="timeline-detail-text">WPA and PWA fund approximately <strong>750 public pools</strong>, the largest single-decade investment in U.S. recreational infrastructure on record.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1948</div>
+        <div>
+          <div class="timeline-detail-label">Pre-desegregation peak</div>
+          <div class="timeline-detail-text">Fairground Park Pool (St. Louis) records approximately <strong>313,000 swims</strong> across one summer season.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1949</div>
+        <div>
+          <div class="timeline-detail-label">Court-ordered integration</div>
+          <div class="timeline-detail-text">Fairground Park integrates by court order; significant unrest follows.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1950</div>
+        <div>
+          <div class="timeline-detail-label">Attendance collapse</div>
+          <div class="timeline-detail-text">Same pool records approximately <strong>10,000 swims</strong> — a <strong>97% decline</strong> from two summers earlier.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1956</div>
+        <div>
+          <div class="timeline-detail-label">Closure</div>
+          <div class="timeline-detail-text">Fairground Park Pool closes permanently. Similar closures and slow-decay patterns recur across U.S. cities through the 1950s and 1960s.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1961–<br>1972</div>
+        <div>
+          <div class="timeline-detail-label">State-level pattern</div>
+          <div class="timeline-detail-text">Mississippi closes <strong>approximately half</strong> of its public pools across this decade-plus span, per work cited in <em>Southeastern Geographer</em>.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1971</div>
+        <div>
+          <div class="timeline-detail-label">Supreme Court</div>
+          <div class="timeline-detail-text"><em>Palmer v. Thompson</em>: the Court rules Jackson, Mississippi may close four of its five public pools rather than integrate, on the grounds that the closures affect all residents equally.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2026</div>
+        <div>
+          <div class="timeline-detail-label">Today</div>
+          <div class="timeline-detail-text">The United States operates approximately <strong>5,500 public pools</strong>, a per-capita rate of <strong>1.6 per 100,000</strong> residents.</div>
+        </div>
+      </div>
+    </div>
+
+    <p>This argument is widely cited and serious. It is also, for reasons worth being honest about, only one of several structural explanations for the contemporary gap. Suburbanization beginning in the 1950s shifted recreational demand outside the central-city neighborhoods where most public pools were concentrated, weakening the political constituency for new municipal pool investment. The expansion of backyard pool ownership through the 1960s, 1970s, and 1980s privatized a substantial share of swimming infrastructure in ways that did not require active policy decisions to dismantle the public alternative. And state and municipal fiscal pressures from the 1970s onward — particularly after California's Proposition 13 and similar tax-revolt measures — reduced new capital investment in public recreation broadly, of which pools were one casualty.</p>
+
+    <p>The desegregation-era pool closures Wiltse documents are real, and they are part of this longer structural transformation. They are not, by themselves, the whole story. The contemporary American per-capita rate of 1.6 pools per 100,000 residents is the cumulative outcome of overlapping mid-century shifts in racial politics, suburban development, household economics, and municipal finance — each of which would have produced some part of the decline on its own.</p>
+
+    <div class="pullquote">
+      <p>"The desegregation-era pool closures Wiltse documents are real, and they are part of this longer structural transformation. They are not, by themselves, the whole story."</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── CHAPTER 7 — ENDURRAMMIN ───────────────────────────── -->
+<div class="chapter">
+  <div class="chapter-marker">
+    <div class="chapter-icelandic">Endurrömmun</div>
+    <div class="chapter-english"><span class="rule"></span>The Reframe</div>
+  </div>
+</div>
+
+<section class="section tinted">
+  <div class="container">
+    <h2>A public-pool count, applied consistently, is also a measure of how a country chooses to socialize bathing.</h2>
+
+    <p>The strict definition this essay used — facilities operated by a municipality or a government-licensed nonprofit, open to the public for a per-visit fee, year-round, constructed — is internally consistent. Applied uniformly across five countries, it produces a defensible cross-country comparison. It does, however, do two things at the same time. It counts how many publicly-operated swimming pools each country has. And, more quietly, it counts how each country has decided to socialize the provision of recreational bathing.</p>
+
+    <p>These two things are not separable. A country that delivers its swimming infrastructure primarily through publicly-operated municipal pools shows up high in this kind of count. A country that delivers the same total recreational supply through a mix of private clubs, backyard pools, hotel facilities, and seasonal-only outdoor pools — none of which meet the strict definition — shows up low. The two countries might have similar total bathing capacity. They would have very different counts.</p>
+
+    <p>The Icelandic case is the easiest one to see this in. Sundlaug culture in Iceland is not just a quantity of pools; it is a specific civic decision about what kind of infrastructure swimming should be. Pools are placed adjacent to schools, embedded in neighborhood centers, priced at small per-visit fees, and operated as everyday public space. The 23.5-per-100,000 figure captures the result of that civic decision. It does not, on its own, tell you whether Icelanders swim more often than Americans, only how much of their swimming runs through a publicly-operated facility.</p>
+
+    <p>The American case is the easiest one to see this in from the opposite direction. The United States has a substantial total quantity of swimming infrastructure, perhaps comparable per-capita to European norms once private clubs, backyard pools, and seasonal facilities are counted. What it does not have is much of that infrastructure delivered as a public good. The 1.6-per-100,000 figure is not necessarily a count of how much swimming Americans do. It is a count of how little of American swimming has been organized as a publicly-operated, year-round, open-to-anyone activity.</p>
+
+    <p>This is not a flaw in the analysis. It is a property of what the analysis sets out to measure. A "public swimming pool density" comparison is, in effect, a comparison of public-provisioning philosophies as much as it is a comparison of infrastructure quantity. Two countries can arrive at very different per-capita-public-pool figures without differing very much in total recreational capacity, if their decisions about how to socialize that capacity diverge. Both are true at the same time, and the count alone does not tell you which is doing the most work.</p>
+
+    <div class="pullquote">
+      <p>"Iceland did not, exactly, build more pools than the United States. Iceland decided that pools should be a thing the public builds."</p>
+    </div>
+
+    <p>What the essay can claim, at the end of all the qualifications, is that the cross-country variation in publicly-operated swimming pool density is large, real, and not an artifact of how the question is asked. Iceland is in a category by itself. Three European countries cluster at a stable, observable middle. The United States operates at roughly half that middle. The variation is mostly a story about public provisioning rather than mostly a story about how much each country swims. Whether the publicly-provisioned arrangement produces a meaningfully different lived experience — more swimming, healthier swimming, more democratic public space — is a question the count cannot answer. Whether the choice to provision swimming as public infrastructure is itself worth making is a question the count is not the right tool for at all.</p>
+
+    <p>What the count is good for is making the question legible. Most public infrastructure decisions, in most countries, are not subject to direct cross-national comparison; the categories are too different, the data too inconsistent. Public swimming pools — by good fortune of nomenclature and a few authoritative national directories — are an exception. The count documents that countries which look similar on most dimensions can diverge by an order of magnitude in how much of their bathing they choose to operate as public infrastructure. It does not tell you what to do about that. It tells you that the divergence exists, and is large enough to be worth a sentence in any future conversation about how we decide which parts of daily life belong to the public sphere.</p>
+  </div>
+</section>
+
+
+<!-- ───────────────────────────── FOOTER ───────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-meta-label">May 2026</div>
+      <div class="footer-title">Sundlaug Country</div>
+      <div class="footer-meta-text">
+        Somewhere-else.org<br>
+        An essay on public infrastructure<br>
+        Published Tuesday, May 19, 2026
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-source-group">
+        <div class="footer-source-label">Primary Data Sources</div>
+        <div class="footer-source-list">
+          <strong>Iceland</strong> — Sundlaugar.is, national pool directory · <em>sundlaugar.is/en/swimming-pools/</em><br>
+          <strong>Finland</strong> — LIPAS national sport facility database, via Suomi et al., University of Oulu, 2015<br>
+          <strong>Sweden</strong> — BeFair industry research; Swedish Swimming Federation (Svenska Simförbundet)<br>
+          <strong>United Kingdom</strong> — Leisure Database Company, <em>2024 State of the UK Swimming Industry Report</em><br>
+          <strong>United States</strong> — Trust for Public Land, via Swimply analytical report
+        </div>
+      </div>
+
+      <div class="footer-source-group">
+        <div class="footer-source-label">Historical Sources</div>
+        <div class="footer-source-list">
+          Wiltse, J. <em>Contested Waters: A Social History of Swimming Pools in America</em>. University of North Carolina Press, 2007.<br>
+          McGhee, H. <em>The Sum of Us</em>. One World, 2021.<br>
+          Marketplace (APM), "Public pools used to be everywhere in America. Then racism shut them down." February 15, 2021.
+        </div>
+      </div>
+
+      <div class="footer-source-group">
+        <div class="footer-source-label">Methodology</div>
+        <div class="footer-source-list">
+          A companion technical report documents the strict definition, sensitivity scenarios, uncertainty treatment, and scope limitations of this analysis. Historical figures in the timeline are sourced from secondary materials citing Wiltse (2007); the historical section should be read as faithful transmission of a scholarly account rather than as independent archival work.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    Somewhere-else.org <span class="accent">·</span> Essays on Cities and Systems
+  </div>
+</footer>
+
+
+<script>
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.section, .dark-section, .chapter').forEach(el => observer.observe(el));
+
+  // ── CHART DEFAULTS ──
+  Chart.defaults.font.family = "'Source Serif 4', Georgia, serif";
+  Chart.defaults.color = '#6c7679';
+
+  const BASALT = '#0c1820';
+  const COPPER = '#b56b3a';
+  const COPPER_SOFT = 'rgba(181, 107, 58, 0.85)';
+  const POOL = '#2a6e6b';
+  const POOL_SOFT = 'rgba(42, 110, 107, 0.78)';
+  const MUTED_GREY = 'rgba(108, 118, 121, 0.65)';
+
+  // ── DENSITY CHART ──
+  const densityCountries = ['Iceland', 'Sweden', 'United Kingdom', 'Finland', 'United States'];
+  const densityValues   = [23.5, 4.3,  3.95, 3.5,  1.6];
+  const densityCILow    = [23.0, 4.21, 3.87, 3.43, 1.4];
+  const densityCIHigh   = [24.0, 4.39, 4.03, 3.57, 1.8];
+
+  // Color: Iceland in copper (highlight), US in muted grey (absence), Europe in pool teal
+  const densityColors = densityCountries.map(c => {
+    if (c === 'Iceland') return COPPER_SOFT;
+    if (c === 'United States') return MUTED_GREY;
+    return POOL_SOFT;
+  });
+
+  new Chart(document.getElementById('densityChart'), {
+    type: 'bar',
+    data: {
+      labels: densityCountries,
+      datasets: [{
+        label: 'Pools per 100,000 residents',
+        data: densityValues,
+        backgroundColor: densityColors,
+        borderWidth: 0,
+        borderRadius: 2,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const i = ctx.dataIndex;
+              return ` ${ctx.raw.toFixed(1)} per 100k (range: ${densityCILow[i].toFixed(1)}–${densityCIHigh[i].toFixed(1)})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: 0, max: 28,
+          grid: { color: 'rgba(12, 24, 32, 0.06)' },
+          ticks: { font: { family: "'DM Mono', monospace", size: 11 } },
+          title: { display: true, text: 'Pools per 100,000 residents (range shown)', font: { family: "'DM Mono', monospace", size: 11 }, color: '#6c7679', padding: 10 }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { family: "'Source Serif 4', Georgia, serif", size: 14 } }
+        }
+      }
+    },
+    plugins: [{
+      id: 'errorBarsAndLabels',
+      afterDatasetsDraw(chart) {
+        const { ctx, scales: { x, y } } = chart;
+        ctx.save();
+        // Range bars
+        ctx.strokeStyle = 'rgba(12, 24, 32, 0.55)';
+        ctx.lineWidth = 1.2;
+        densityValues.forEach((val, i) => {
+          const yPx = y.getPixelForValue(i);
+          const xLow = x.getPixelForValue(densityCILow[i]);
+          const xHigh = x.getPixelForValue(densityCIHigh[i]);
+          ctx.beginPath();
+          ctx.moveTo(xLow, yPx);
+          ctx.lineTo(xHigh, yPx);
+          ctx.moveTo(xLow, yPx - 5);
+          ctx.lineTo(xLow, yPx + 5);
+          ctx.moveTo(xHigh, yPx - 5);
+          ctx.lineTo(xHigh, yPx + 5);
+          ctx.stroke();
+        });
+        // Value labels
+        ctx.fillStyle = BASALT;
+        ctx.font = "500 12px 'DM Mono', monospace";
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        densityValues.forEach((val, i) => {
+          const yPx = y.getPixelForValue(i);
+          const xPx = x.getPixelForValue(densityCIHigh[i]) + 8;
+          ctx.fillText(val.toFixed(1), xPx, yPx);
+        });
+        ctx.restore();
+      }
+    }]
+  });
+</script>
+</body>
+</html>
